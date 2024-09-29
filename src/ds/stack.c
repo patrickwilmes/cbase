@@ -36,6 +36,10 @@ int stack_is_empty(const stack_t *stack) {
 void stack_destroy(stack_t *stack) {
     if (stack != NULL) {
         if (stack->data != NULL) {
+            while (!stack_is_empty(stack)) {
+                void *element = stack_pop(stack);
+                free(element);
+            }
             free(stack->data);
         }
         free(stack);
