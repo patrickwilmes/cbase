@@ -10,13 +10,40 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#define CURRENT_TOKEN_BUF_SIZE 1024
+
+typedef struct {
+    const char* token;
+    enum token_type type;
+} token_map;
+
+token_map token_maps[] = {
+    {"(", open_brace},
+    {")", close_brace},
+    {",", comma},
+    {"create", create},
+    {"table", table},
+    {"key", key},
+    {"primary", primary},
+    {"not", not},
+    {"null", null},
+    {"integer", data_type},
+    {"text", data_type},
+};
+
+static void consume(stack_t *stack, enum token_type type, char *value, int *current_token_ptr, char *current_token) {
+    token_t *token = token_create(type, value);
+    stack_push(stack, token);
+    *current_token_ptr = -1;
+    memset(current_token, 0, CURRENT_TOKEN_BUF_SIZE);
+}
 
 stack_t *tokenize(const char *source) {
     stack_t *tokens = stack_create(10);
 
     int source_ptr = 0;
 
-    char current_token[1024] = {0};
+    char current_token[CURRENT_TOKEN_BUF_SIZE] = {0};
     int current_token_ptr = -1;
     do {
         if (source[source_ptr] == ' ' || source[source_ptr] == '\n') {
@@ -25,37 +52,26 @@ stack_t *tokenize(const char *source) {
         }
         current_token_ptr++;
         current_token[current_token_ptr] = source[source_ptr];
-
-        if (strcmp(current_token, "(") == 0) {
-            token_t *token = token_create(open_brace, NULL);
-            stack_push(tokens, token);
-            current_token_ptr = -1;
-            memset(current_token, 0, sizeof(current_token));
-        } else if (strcmp(current_token, ")") == 0) {
-            token_t *token = token_create(close_brace, NULL);
-            stack_push(tokens, token);
-            current_token_ptr = -1;
-            memset(current_token, 0, sizeof(current_token));
-        } else if (strcmp(current_token, "create") == 0) {
-            token_t *token = token_create(create, NULL);
-            stack_push(tokens, token);
-            current_token_ptr = -1;
-            memset(current_token, 0, sizeof(current_token));
-        } else if (strcmp(current_token, "table") == 0) {
-            token_t *token = token_create(table, NULL);
-            stack_push(tokens, token);
-            current_token_ptr = -1;
-            memset(current_token, 0, sizeof(current_token));
-        } else if (source[source_ptr+1] == ' ') {
+        for (int i = 0; token_maps[i].token != NULL; ++i) {
+            if (strcmp(token_maps[i].token, current_token) == 0) {
+                if (token_maps[i].type == data_type) {
+                    // ReSharper disable once CppDFAMemoryLeak
+                    // this is properly freed via token destructor - checked with valgrind
+                    char *value = calloc(1024, sizeof(char));
+                    strcpy(value, current_token);
+                    consume(tokens, token_maps[i].type, value, &current_token_ptr, current_token);
+                } else {
+                    consume(tokens, token_maps[i].type, NULL, &current_token_ptr, current_token);
+                }
+            }
+        }
+        if (source[source_ptr+1] == ' ') {
             if (strcmp(current_token, "") != 0) {
                 // ReSharper disable once CppDFAMemoryLeak
                 // this is properly freed via token destructor - checked with valgrind
                 char *value = calloc(1024, sizeof(char));
                 strcpy(value, current_token);
-                token_t *token = token_create(string_literal, value);
-                stack_push(tokens, token);
-                current_token_ptr = -1;
-                memset(current_token, 0, sizeof(current_token));
+                consume(tokens, string_literal, value, &current_token_ptr, current_token);
             }
         }
         source_ptr++;
@@ -117,6 +133,9 @@ void token_explain(token_t *token) {
             break;
         case null:
             printf("null");
+            break;
+        case data_type:
+            printf("data_type: %s", token->value);
             break;
     }
     printf("\n");

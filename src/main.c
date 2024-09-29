@@ -10,11 +10,17 @@
 #include "lexer.h"
 
 void process_input(const char *input);
+
 void repl();
 
-int main(void)
-{
-    process_input("create table test (");
+int main(void) {
+    process_input(
+        "create table test (\n"
+        "id integer primary key, \n"
+        "name text not null, \n"
+        "age integer, \n"
+        ");\n"
+    );
     // repl();
     return 0;
 }

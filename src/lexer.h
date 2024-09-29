@@ -21,6 +21,7 @@ enum token_type {
     key,
     not,
     null,
+    data_type,
 };
 
 typedef struct token {
