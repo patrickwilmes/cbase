@@ -33,6 +33,16 @@ int stack_is_empty(const stack_t *stack) {
     return stack->top == -1;
 }
 
+stack_t* stack_reverse(stack_t *stack) {
+    stack_t *aux = stack_create(stack->capacity);
+    while (!stack_is_empty(stack)) {
+        void *element = stack_pop(stack);
+        stack_push(aux, element);
+    }
+    stack_destroy(stack);
+    return aux;
+}
+
 void stack_destroy(stack_t *stack) {
     if (stack != NULL) {
         if (stack->data != NULL) {

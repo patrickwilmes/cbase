@@ -23,4 +23,6 @@ void stack_destroy(stack_t *stack);
 
 int stack_is_empty(const stack_t *stack);
 
+stack_t* stack_reverse(stack_t *stack);
+
 #endif //STACK_H

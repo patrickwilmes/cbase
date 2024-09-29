@@ -44,6 +44,7 @@ void repl() {
 
 void process_input(const char *input) {
     stack_t *tokens = tokenize(input);
+    tokens = stack_reverse(tokens);
     while (!stack_is_empty(tokens)) {
         token_t *token = stack_pop(tokens);
         token_explain(token);
