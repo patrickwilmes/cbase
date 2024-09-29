@@ -14,12 +14,16 @@ void process_input(const char *input);
 void repl();
 
 int main(void) {
+    // process_input(
+    //     "create table test (\n"
+    //     "id integer primary key, \n"
+    //     "name text not null, \n"
+    //     "age integer, \n"
+    //     ");\n"
+    // );
+    // printf("---------------------------------\n");
     process_input(
-        "create table test (\n"
-        "id integer primary key, \n"
-        "name text not null, \n"
-        "age integer, \n"
-        ");\n"
+        "insert into test (id, name, age) values (28, \"max\", 28);"
     );
     // repl();
     return 0;

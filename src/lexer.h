@@ -12,7 +12,7 @@
 enum token_type {
     create,
     table,
-    string_literal,
+    identifier,
     open_brace,
     close_brace,
     comma,
@@ -22,6 +22,11 @@ enum token_type {
     not,
     null,
     data_type,
+    insert,
+    into,
+    values,
+    string_literal,
+    number,
 };
 
 typedef struct token {
@@ -32,7 +37,7 @@ typedef struct token {
 token_t* token_create(enum token_type type, char *value);
 
 void token_destroy(token_t *t);
-void token_explain(token_t *token);
+void token_explain(const token_t *token);
 
 stack_t* tokenize(const char* source);
 
