@@ -4,8 +4,9 @@
 *
 * SPDX-License-Identifier: BSD-2-Clause
 */
-#include "hello.h"
+#ifndef STACK_TEST_H
+#define STACK_TEST_H
 
-int give_me_two() {
-    return 2;
-}
+void stack_test();
+
+#endif //STACK_TEST_H

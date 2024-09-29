@@ -7,12 +7,7 @@
 #include <CUnit/CUnit.h>
 #include <CUnit/Basic.h>
 
-#include "hello_test.h"
-
-void test_database_insert(void) {
-    // Example test case
-    CU_ASSERT(1 == 1);  // Replace with actual test logic
-}
+#include "stack_test.h"
 
 int main() {
     // Initialize the test registry
@@ -26,12 +21,8 @@ int main() {
         CU_cleanup_registry();
         return CU_get_error();
     }
-    CU_add_test(pSuite, "HelloTest", test_hello);
-    // Add your test to the suite
-    if ((NULL == CU_add_test(pSuite, "test_database_insert", test_database_insert))) {
-        CU_cleanup_registry();
-        return CU_get_error();
-    }
+
+    CU_add_test(pSuite, "StackTest", stack_test);
 
     // Run tests using the basic interface
     CU_basic_set_mode(CU_BRM_VERBOSE);

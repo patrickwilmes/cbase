@@ -8,16 +8,16 @@ if (NOT CUNIT_LIBRARY OR NOT CUNIT_INCLUDE_DIR)
 endif()
 
 SET(PROD_SOURCES
-        ../src/hello.h
-        ../src/hello.c
-        hello_test.h
+        ../src/ds/stack.c
+        ../src/ds/stack.h
 )
 
 include_directories(${PROJECT_SOURCE_DIR}/src)
 
 add_executable(cbase_test
         test_main.c
-        hello_test.c
+        stack_test.c
+        stack_test.h
         ${PROD_SOURCES}
 )
 

@@ -1,5 +1,8 @@
 
 SET(SOURCES
-    hello.c hello.h
+        lexer.c
+        lexer.h
+        ds/stack.c
+        ds/stack.h
 )
 add_executable(cbase main.c ${SOURCES})
